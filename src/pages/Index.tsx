@@ -1,12 +1,69 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from "react";
+import { Hero } from "@/components/Hero";
+import { AdviceForm, FormData } from "@/components/AdviceForm";
+import { AdviceDisplay } from "@/components/AdviceDisplay";
+import { toast } from "sonner";
 
 const Index = () => {
+  const [advice, setAdvice] = useState<string>("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmit = async (formData: FormData) => {
+    setIsLoading(true);
+    setAdvice("");
+    
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/agro-advice`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          },
+          body: JSON.stringify(formData),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to get advice");
+      }
+
+      const data = await response.json();
+      setAdvice(data.advice);
+      toast.success("Advice generated successfully!");
+    } catch (error) {
+      console.error("Error getting advice:", error);
+      toast.error(
+        error instanceof Error ? error.message : "Failed to get advice. Please try again."
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen bg-background">
+      <Hero />
+      
+      <main className="container mx-auto px-4 py-16 max-w-5xl">
+        <AdviceForm onSubmit={handleSubmit} isLoading={isLoading} />
+        
+        {advice && (
+          <div className="mt-12">
+            <AdviceDisplay advice={advice} />
+          </div>
+        )}
+      </main>
+
+      <footer className="border-t border-border/50 mt-20">
+        <div className="container mx-auto px-4 py-8 text-center text-muted-foreground">
+          <p className="flex items-center justify-center gap-2 text-sm">
+            <span>Built with 🌱 for regenerative agriculture</span>
+          </p>
+        </div>
+      </footer>
     </div>
   );
 };
