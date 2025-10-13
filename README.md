@@ -86,14 +86,6 @@ By offering real-time, location-agnostic insights, AgroSense bridges the gap bet
 
 ---
 
-## ✨ Demo Script for Presentation
-
-> “AgroSense is an AI assistant that brings regenerative agriculture advice to every farmer.
-> Enter your crop, soil, and rainfall — and in seconds, AgroSense gives you actionable, sustainable steps and explains *why* they work.
-
-
----
-
 **Live Preview**
 
 Simply visit the [Agro Sense](https://regen-advisor-bot.lovable.app)
