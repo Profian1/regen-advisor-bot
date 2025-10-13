@@ -1,18 +1,102 @@
-# Welcome to your Lovable project
+# 🌱 AgroSense — AI-Powered Sustainable Farming Assistant
 
-## Project info
+## 💡 Overview
 
-**URL**: https://lovable.dev/projects/6648cda5-35d8-4a39-a0bb-5c1dc638a365
+**AgroSense** is an AI-driven web assistant designed to help smallholder farmers and agricultural communities make **data-informed, eco-friendly farming decisions**.
+By analyzing basic inputs such as **crop type**, **soil condition**, and **rainfall levels**, AgroSense provides **personalized regenerative agriculture advice** — along with **scientific justifications** for each recommendation.
 
-## How can I edit this code?
+The project was developed during the **🌍 Land ReGen Hackathon (October 2025)**, under the theme *“AI for Land Rehabilitation and Sustainability.”*
 
-There are several ways of editing your application.
+---
 
-**Use Lovable**
+## 🎯 Problem Statement
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/6648cda5-35d8-4a39-a0bb-5c1dc638a365) and start prompting.
+Across many regions, **soil degradation**, **erosion**, and **declining productivity** threaten food security and local livelihoods.
+Farmers often lack **accessible expert guidance** on sustainable practices that can restore soil health while maintaining yields.
 
-Changes made via Lovable will be committed automatically to this repo.
+Traditional agricultural extension systems are often underfunded or unavailable in remote areas — leaving farmers with limited, outdated, or costly information.
+
+---
+
+## 🌾 Solution
+
+**AgroSense** empowers farmers with instant, **AI-generated regenerative farming advice** directly from their browsers or mobile devices.
+
+### Key Features
+
+* 🧠 **AI Advisor:** Provides 3 actionable farming tips based on user input (e.g., “Plant cover crops,” “Apply compost mulch,” etc.).
+* 🌍 **Scientific Justification:** Each set of recommendations includes a concise explanation rooted in soil science and agroecology.
+* 💾 **Database Integration:** Every user query (problem and advice) is securely logged in a database.
+* 🔄 **Live Community Feed:** Displays the last 3–5 recent farmer queries to show real-time engagement.
+* 💚 **Eco-Friendly Focus:** Avoids chemical fertilizers and deep tilling; prioritizes organic, sustainable practices.
+
+---
+
+## 🧠 How It Works
+
+1. The user inputs:
+
+   * **Crop Type** (e.g., maize, beans)
+   * **Soil Condition** (e.g., dry, compacted)
+   * **Rainfall Level** (e.g., 200mm/month)
+
+2. AgroSense sends this data to the **AI API** with a custom system prompt that instructs the AI to:
+
+   * Provide *3 actionable recommendations*
+   * Include a *scientific justification* explaining the advice
+
+3. The results are:
+
+   * Displayed in two visually distinct boxes: **Advice** (green) and **Justification** (yellow/brown)
+   * Shown in a **Recent Queries** section at the bottom of the app
+
+---
+
+## 🌍 Impact on the Community
+
+AgroSense supports **farmers, students, and agricultural extension officers** by:
+
+* 🧑🏾‍🌾 Democratizing expert farming advice through AI
+* 🌱 Encouraging the adoption of **regenerative and climate-smart agriculture**
+* 💬 Building a shared knowledge base where users can see what others are asking
+* 📉 Reducing dependence on synthetic inputs and improving **soil health and resilience**
+
+By offering real-time, location-agnostic insights, AgroSense bridges the gap between **AI innovation** and **grassroots sustainability**.
+
+---
+
+## 🌎 Alignment with the United Nations Sustainable Development Goals (SDGs)
+
+| SDG                                    | Alignment                                                         |
+| -------------------------------------- | ----------------------------------------------------------------- |
+| **SDG 2: Zero Hunger**                 | Promotes sustainable food production and soil fertility           |
+| **SDG 13: Climate Action**             | Encourages carbon-sequestering and climate-resilient practices    |
+| **SDG 15: Life on Land**               | Focuses on preventing land degradation and restoring ecosystems   |
+| **SDG 17: Partnerships for the Goals** | Combines AI innovation with open data and community collaboration |
+
+---
+
+## 🧩 Future Enhancements
+
+* 🌾 Integration with **GIS data** for location-based soil and rainfall mapping
+* 🛰️ Satellite-powered monitoring (NDVI-based degradation tracking)
+* 🔔 SMS or email alert system for farmers via **Resend API**
+* 🗺️ Multi-language support for local communities
+* 📊 Community leaderboard for shared sustainable practices
+
+---
+
+## ✨ Demo Script for Presentation
+
+> “AgroSense is an AI assistant that brings regenerative agriculture advice to every farmer.
+> Enter your crop, soil, and rainfall — and in seconds, AgroSense gives you actionable, sustainable steps and explains *why* they work.
+
+
+---
+
+**Live Preview**
+
+Simply visit the [Agro Sense](https://regen-advisor-bot.lovable.app)
 
 **Use your preferred IDE**
 
@@ -60,14 +144,12 @@ This project is built with:
 - shadcn-ui
 - Tailwind CSS
 
-## How can I deploy this project?
+---
 
-Simply open [Lovable](https://lovable.dev/projects/6648cda5-35d8-4a39-a0bb-5c1dc638a365) and click on Share -> Publish.
+## 🏁 Acknowledgements
 
-## Can I connect a custom domain to my Lovable project?
+Built with ❤️ during the **Land ReGen Hackathon 2025**
+by **Ian Mwangi** 
 
-Yes, you can!
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
