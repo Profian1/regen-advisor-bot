@@ -1,12 +1,41 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Hero } from "@/components/Hero";
 import { AdviceForm, FormData } from "@/components/AdviceForm";
 import { AdviceDisplay } from "@/components/AdviceDisplay";
+import { OnboardingModal } from "@/components/OnboardingModal";
 import { toast } from "sonner";
+
+interface OnboardingData {
+  location: string;
+  farmSize: string;
+  mainGoal: string;
+}
 
 const Index = () => {
   const [advice, setAdvice] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [onboardingData, setOnboardingData] = useState<OnboardingData | null>(null);
+
+  useEffect(() => {
+    const hasOnboarded = localStorage.getItem("agrosense_onboarded");
+    if (!hasOnboarded) {
+      setShowOnboarding(true);
+    } else {
+      const saved = localStorage.getItem("agrosense_profile");
+      if (saved) {
+        setOnboardingData(JSON.parse(saved));
+      }
+    }
+  }, []);
+
+  const handleOnboardingComplete = (data: OnboardingData) => {
+    setOnboardingData(data);
+    localStorage.setItem("agrosense_onboarded", "true");
+    localStorage.setItem("agrosense_profile", JSON.stringify(data));
+    setShowOnboarding(false);
+    toast.success("Profile saved! Let's get started.");
+  };
 
   const handleSubmit = async (formData: FormData) => {
     setIsLoading(true);
@@ -21,7 +50,10 @@ const Index = () => {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
           },
-          body: JSON.stringify(formData),
+          body: JSON.stringify({
+            ...formData,
+            ...onboardingData,
+          }),
         }
       );
 
@@ -44,7 +76,10 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <>
+      <OnboardingModal open={showOnboarding} onComplete={handleOnboardingComplete} />
+      
+      <div className="min-h-screen bg-background">
       <Hero />
       
       <main className="container mx-auto px-4 py-16 max-w-5xl">
@@ -65,6 +100,7 @@ const Index = () => {
         </div>
       </footer>
     </div>
+    </>
   );
 };
 

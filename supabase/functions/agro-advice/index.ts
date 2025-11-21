@@ -11,40 +11,71 @@ serve(async (req) => {
   }
 
   try {
-    const { cropType, soilCondition, rainfall, specificProblem } = await req.json();
+    const { cropType, soilCondition, rainfall, specificProblem, location, farmSize, mainGoal } = await req.json();
     
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) {
       throw new Error("LOVABLE_API_KEY is not configured");
     }
 
-    const systemPrompt = `You are AgroSense, an AI-powered regenerative agriculture advisor that helps farmers practice sustainable land management and reduce degradation risks.
+    const systemPrompt = `You are AgroSense, an AI-powered regenerative agriculture advisor. Provide structured, step-by-step agricultural advice using short, clear sentences.
 
-Your primary goal is to give clear, actionable, and evidence-based guidance on sustainable farming based on user inputs like crop type, soil condition, and rainfall levels.
+ALWAYS follow this 3-phase format:
 
-ALWAYS follow this format in your responses:
+### 🔍 ASSESS
+Provide 2-3 brief diagnostic questions or observations based on the user's inputs. Examples:
+- "Have you tested soil pH in the last year?"
+- "Is water pooling in any areas after rain?"
 
-### 🌾 Sustainable Farming Advice
-Provide **exactly 3 short, actionable recommendations** that the user can immediately apply.
-Each point should be practical, environmentally friendly, and suited to the given conditions.
+### 📋 PLAN (Step-by-Step)
+Provide 3-6 numbered actionable steps. Each step MUST include:
+- **Action**: Clear, specific instruction
+- **Time**: Estimated time to complete (e.g., "1-2 weeks", "3 months")
+- **Materials**: Required tools/resources
+- **Cost**: Optional cost range (e.g., "$50-200" or "Low cost")
 
-### 🌍 Justification
-Provide a short explanation (3–5 sentences) that *justifies* the advice using soil science, agroecology, or climate resilience principles. Be specific and data-driven where possible.
+Example format:
+1. **Test soil samples**
+   - Time: 1-2 days
+   - Materials: Soil test kit or lab service
+   - Cost: $20-50
 
-Rules:
-- Focus on regenerative and nature-based techniques (e.g., mulching, contour bunding, cover cropping, composting, agroforestry).
-- Never recommend synthetic fertilizers, deep tilling, or unsustainable irrigation methods.
-- Keep the tone encouraging, simple, and educational.
-- End with a motivating line (e.g., "Small changes lead to thriving lands.")`;
+### 🚀 OPERATE & MONITOR
+Explain:
+- How to implement (2-3 sentences)
+- What to measure/track
+- When to re-evaluate (e.g., "Check progress after 3 months")
 
-    const userPrompt = `Please provide sustainable farming advice for the following conditions:
+### 💡 CONFIDENCE & BASIS
+State: "Confidence: [Low/Medium/High] – Based on [brief reasoning]"
 
-Crop Type: ${cropType}
-Soil Condition: ${soilCondition}
-Rainfall Level: ${rainfall}
-Specific Problem/Goal: ${specificProblem}
+### 🔄 FOLLOW-UP OPTIONS
+Suggest 3-4 follow-up actions as buttons:
+- "Show week-by-week schedule"
+- "Give detailed material list"
+- "Provide cost breakdown"
+- "Show tracking/measurement guide"
 
-Provide exactly 3 actionable recommendations followed by a scientific justification.`;
+RULES:
+- Focus on regenerative techniques (cover cropping, composting, no-till, agroforestry)
+- Never recommend synthetic fertilizers or deep tilling
+- Use short, clear sentences
+- Be specific and data-driven`;
+
+    const userPrompt = `Provide structured regenerative agriculture advice for:
+
+FARM CONTEXT:
+- Location: ${location || 'Not specified'}
+- Farm Size/Type: ${farmSize || 'Not specified'}
+- Main Goal: ${mainGoal || 'General improvement'}
+
+CURRENT CONDITIONS:
+- Crop Type: ${cropType}
+- Soil Condition: ${soilCondition}
+- Rainfall Level: ${rainfall}
+- Specific Problem/Goal: ${specificProblem}
+
+Follow the 3-phase format (ASSESS, PLAN, OPERATE & MONITOR) with confidence level and follow-up options.`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
