@@ -1,38 +1,40 @@
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Loader2, Sprout } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { adviceFormSchema, type AdviceFormData } from "@/lib/validations";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 
 interface AdviceFormProps {
-  onSubmit: (data: FormData) => Promise<void>;
+  onSubmit: (data: AdviceFormData) => Promise<void>;
   isLoading: boolean;
 }
 
-export interface FormData {
-  cropType: string;
-  soilCondition: string;
-  rainfall: string;
-  specificProblem: string;
-}
+export type { AdviceFormData as FormData };
 
 export const AdviceForm = ({ onSubmit, isLoading }: AdviceFormProps) => {
-  const [formData, setFormData] = useState<FormData>({
-    cropType: "",
-    soilCondition: "",
-    rainfall: "",
-    specificProblem: "",
+  const form = useForm<AdviceFormData>({
+    resolver: zodResolver(adviceFormSchema),
+    defaultValues: {
+      cropType: "",
+      soilCondition: "",
+      rainfall: "",
+      specificProblem: "",
+    },
   });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    await onSubmit(formData);
-  };
-
-  const handleChange = (field: keyof FormData, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+  const handleSubmit = async (data: AdviceFormData) => {
+    await onSubmit(data);
   };
 
   return (
@@ -47,78 +49,98 @@ export const AdviceForm = ({ onSubmit, isLoading }: AdviceFormProps) => {
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="space-y-2">
-          <Label htmlFor="cropType" className="text-base font-medium">
-            Crop Type
-          </Label>
-          <Input
-            id="cropType"
-            placeholder="e.g., Maize, Wheat, Tomatoes, Mixed vegetables"
-            value={formData.cropType}
-            onChange={(e) => handleChange("cropType", e.target.value)}
-            required
-            className="h-12"
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+          <FormField
+            control={form.control}
+            name="cropType"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-base font-medium">Crop Type</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="e.g., Maize, Wheat, Tomatoes, Mixed vegetables"
+                    className="h-12"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-        </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="soilCondition" className="text-base font-medium">
-            Soil Condition
-          </Label>
-          <Input
-            id="soilCondition"
-            placeholder="e.g., Compacted, Sandy, Clay-heavy, Low organic matter"
-            value={formData.soilCondition}
-            onChange={(e) => handleChange("soilCondition", e.target.value)}
-            required
-            className="h-12"
+          <FormField
+            control={form.control}
+            name="soilCondition"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-base font-medium">Soil Condition</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="e.g., Compacted, Sandy, Clay-heavy, Low organic matter"
+                    className="h-12"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-        </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="rainfall" className="text-base font-medium">
-            Rainfall Level
-          </Label>
-          <Input
-            id="rainfall"
-            placeholder="e.g., High, Moderate, Low, Irregular"
-            value={formData.rainfall}
-            onChange={(e) => handleChange("rainfall", e.target.value)}
-            required
-            className="h-12"
+          <FormField
+            control={form.control}
+            name="rainfall"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-base font-medium">Rainfall Level</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="e.g., High, Moderate, Low, Irregular"
+                    className="h-12"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-        </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="specificProblem" className="text-base font-medium">
-            Specific Problem or Goal
-          </Label>
-          <Textarea
-            id="specificProblem"
-            placeholder="Describe any challenges you're facing or goals you want to achieve (e.g., 'My soil is compacted and water runs off quickly' or 'I want to improve soil fertility naturally')"
-            value={formData.specificProblem}
-            onChange={(e) => handleChange("specificProblem", e.target.value)}
-            required
-            className="min-h-32 resize-none"
+          <FormField
+            control={form.control}
+            name="specificProblem"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-base font-medium">
+                  Specific Problem or Goal
+                </FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="Describe any challenges you're facing or goals you want to achieve (e.g., 'My soil is compacted and water runs off quickly' or 'I want to improve soil fertility naturally')"
+                    className="min-h-32 resize-none"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-        </div>
 
-        <Button 
-          type="submit" 
-          disabled={isLoading}
-          className="w-full h-12 text-base font-semibold bg-primary hover:bg-primary/90 text-primary-foreground"
-        >
-          {isLoading ? (
-            <>
-              <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-              Analyzing Your Conditions...
-            </>
-          ) : (
-            "Get Sustainable Farming Advice"
-          )}
-        </Button>
-      </form>
+          <Button 
+            type="submit" 
+            disabled={isLoading}
+            className="w-full h-12 text-base font-semibold bg-primary hover:bg-primary/90 text-primary-foreground"
+          >
+            {isLoading ? (
+              <>
+                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                Analyzing Your Conditions...
+              </>
+            ) : (
+              "Get Sustainable Farming Advice"
+            )}
+          </Button>
+        </form>
+      </Form>
     </Card>
   );
 };

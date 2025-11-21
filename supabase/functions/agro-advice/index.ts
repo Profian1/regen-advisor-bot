@@ -5,13 +5,96 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+// Server-side validation and sanitization
+const sanitizeString = (str: string): string => {
+  return str.trim().replace(/\s+/g, ' ');
+};
+
+const validateInput = (data: any) => {
+  const errors: string[] = [];
+
+  // Validate cropType
+  if (!data.cropType || typeof data.cropType !== 'string') {
+    errors.push('cropType is required');
+  } else if (data.cropType.trim().length < 2 || data.cropType.trim().length > 200) {
+    errors.push('cropType must be between 2 and 200 characters');
+  }
+
+  // Validate soilCondition
+  if (!data.soilCondition || typeof data.soilCondition !== 'string') {
+    errors.push('soilCondition is required');
+  } else if (data.soilCondition.trim().length < 2 || data.soilCondition.trim().length > 200) {
+    errors.push('soilCondition must be between 2 and 200 characters');
+  }
+
+  // Validate rainfall
+  if (!data.rainfall || typeof data.rainfall !== 'string') {
+    errors.push('rainfall is required');
+  } else if (data.rainfall.trim().length < 2 || data.rainfall.trim().length > 200) {
+    errors.push('rainfall must be between 2 and 200 characters');
+  }
+
+  // Validate specificProblem
+  if (!data.specificProblem || typeof data.specificProblem !== 'string') {
+    errors.push('specificProblem is required');
+  } else if (data.specificProblem.trim().length < 10 || data.specificProblem.trim().length > 2000) {
+    errors.push('specificProblem must be between 10 and 2000 characters');
+  }
+
+  // Validate optional fields
+  if (data.location && (typeof data.location !== 'string' || data.location.trim().length > 150)) {
+    errors.push('location must be less than 150 characters');
+  }
+
+  if (data.farmSize && !['<1ha', '1-5ha', '5-20ha', '20-50ha', '>50ha'].includes(data.farmSize)) {
+    errors.push('Invalid farmSize value');
+  }
+
+  if (data.mainGoal && !['soil_health', 'carbon_sequestration', 'crop_quality', 'water_management', 'biodiversity'].includes(data.mainGoal)) {
+    errors.push('Invalid mainGoal value');
+  }
+
+  return errors;
+};
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const { cropType, soilCondition, rainfall, specificProblem, location, farmSize, mainGoal } = await req.json();
+    const rawData = await req.json();
+    
+    // Validate input
+    const validationErrors = validateInput(rawData);
+    if (validationErrors.length > 0) {
+      return new Response(
+        JSON.stringify({ error: 'Invalid input', details: validationErrors }),
+        { 
+          status: 400, 
+          headers: { ...corsHeaders, "Content-Type": "application/json" } 
+        }
+      );
+    }
+
+    // Sanitize inputs
+    const { 
+      cropType, 
+      soilCondition, 
+      rainfall, 
+      specificProblem,
+      location,
+      farmSize,
+      mainGoal
+    } = {
+      cropType: sanitizeString(rawData.cropType),
+      soilCondition: sanitizeString(rawData.soilCondition),
+      rainfall: sanitizeString(rawData.rainfall),
+      specificProblem: sanitizeString(rawData.specificProblem),
+      location: rawData.location ? sanitizeString(rawData.location) : undefined,
+      farmSize: rawData.farmSize,
+      mainGoal: rawData.mainGoal,
+    };
     
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) {
