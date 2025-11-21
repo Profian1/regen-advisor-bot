@@ -30,8 +30,8 @@ export const OnboardingModal = ({ open, onComplete }: OnboardingModalProps) => {
   };
 
   return (
-    <Dialog open={open}>
-      <DialogContent className="sm:max-w-[500px]">
+    <Dialog open={open} onOpenChange={() => {}}>
+      <DialogContent className="sm:max-w-[500px]" onInteractOutside={(e) => e.preventDefault()}>
         <DialogHeader>
           <div className="flex items-center gap-3 mb-2">
             <div className="p-2 rounded-lg bg-primary/10">
