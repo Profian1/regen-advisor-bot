@@ -8,48 +8,44 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Regenerative earth-inspired palette */
-    --background: 40 20% 97%;
-    --foreground: 120 15% 15%;
+    /* Professional regenerative palette */
+    --background: 40 35% 96%;
+    --foreground: 155 25% 15%;
 
     --card: 0 0% 100%;
-    --card-foreground: 120 15% 15%;
+    --card-foreground: 155 25% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 120 15% 15%;
+    --popover-foreground: 155 25% 15%;
 
-    /* Deep fertile green */
-    --primary: 140 45% 25%;
-    --primary-foreground: 40 20% 97%;
+    /* Deep professional green #0B6B3A */
+    --primary: 155 81% 23%;
+    --primary-foreground: 0 0% 100%;
 
-    /* Warm earth brown */
-    --secondary: 30 25% 45%;
-    --secondary-foreground: 40 20% 97%;
+    /* Warm yellow #F2C14E */
+    --secondary: 45 87% 63%;
+    --secondary-foreground: 155 25% 15%;
 
-    --muted: 40 15% 92%;
-    --muted-foreground: 120 10% 40%;
+    --muted: 40 35% 93%;
+    --muted-foreground: 155 15% 45%;
 
-    /* Golden harvest accent */
-    --accent: 45 85% 55%;
-    --accent-foreground: 120 15% 15%;
+    /* Accent for highlights */
+    --accent: 45 87% 63%;
+    --accent-foreground: 155 25% 15%;
 
     --destructive: 0 75% 50%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 40 20% 85%;
-    --input: 40 20% 85%;
-    --ring: 140 45% 35%;
+    --border: 40 20% 88%;
+    --input: 40 20% 88%;
+    --ring: 155 81% 23%;
 
-    --radius: 0.75rem;
+    --radius: 0.875rem;
 
-    /* Gradients */
-    --gradient-earth: linear-gradient(135deg, hsl(30 25% 45%) 0%, hsl(140 45% 25%) 100%);
-    --gradient-growth: linear-gradient(180deg, hsl(140 45% 25%) 0%, hsl(120 55% 35%) 100%);
-    --gradient-harvest: linear-gradient(135deg, hsl(45 85% 55%) 0%, hsl(40 75% 50%) 100%);
-
-    /* Shadows */
-    --shadow-soft: 0 2px 8px -2px hsl(120 15% 15% / 0.1);
-    --shadow-medium: 0 4px 16px -4px hsl(120 15% 15% / 0.15);
+    /* Shadows for cards */
+    --shadow-soft: 0 2px 8px -2px hsl(155 25% 15% / 0.08);
+    --shadow-medium: 0 4px 16px -4px hsl(155 25% 15% / 0.12);
+    --shadow-card: 0 1px 3px 0 hsl(155 25% 15% / 0.1), 0 1px 2px -1px hsl(155 25% 15% / 0.1);
     
     --sidebar-background: 40 20% 98%;
     --sidebar-foreground: 120 15% 20%;
