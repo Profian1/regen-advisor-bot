@@ -16,6 +16,7 @@ const Index = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [onboardingData, setOnboardingData] = useState<OnboardingData | null>(null);
+  const [lastFormData, setLastFormData] = useState<FormData | null>(null);
 
   useEffect(() => {
     const hasOnboarded = localStorage.getItem("agrosense_onboarded");
@@ -40,6 +41,7 @@ const Index = () => {
   const handleSubmit = async (formData: FormData) => {
     setIsLoading(true);
     setAdvice("");
+    setLastFormData(formData);
     
     try {
       const response = await fetch(
@@ -75,6 +77,49 @@ const Index = () => {
     }
   };
 
+  const handleFollowUp = async (followUpQuestion: string) => {
+    if (!lastFormData) {
+      toast.error("No previous context available");
+      return;
+    }
+
+    setIsLoading(true);
+    
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/agro-advice`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          },
+          body: JSON.stringify({
+            ...lastFormData,
+            ...onboardingData,
+            specificProblem: `${lastFormData.specificProblem}\n\nFollow-up request: ${followUpQuestion}`,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to get follow-up advice");
+      }
+
+      const data = await response.json();
+      setAdvice(data.advice);
+      toast.success("Follow-up advice generated!");
+    } catch (error) {
+      console.error("Error getting follow-up:", error);
+      toast.error(
+        error instanceof Error ? error.message : "Failed to get follow-up advice. Please try again."
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <>
       <OnboardingModal open={showOnboarding} onComplete={handleOnboardingComplete} />
@@ -87,7 +132,7 @@ const Index = () => {
         
         {advice && (
           <div className="mt-12">
-            <AdviceDisplay advice={advice} />
+            <AdviceDisplay advice={advice} onFollowUpClick={handleFollowUp} />
           </div>
         )}
       </main>
