@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { CalendarDialog } from "@/components/CalendarDialog";
 import { 
   CheckCircle2, 
   Clock, 
@@ -20,6 +22,7 @@ interface AdviceDisplayProps {
 }
 
 export const AdviceDisplay = ({ advice, onFollowUpClick }: AdviceDisplayProps) => {
+  const [showCalendarDialog, setShowCalendarDialog] = useState(false);
   const sections = advice.split("###").filter(Boolean);
   
   const assessSection = sections.find(s => s.includes("ASSESS"));
@@ -192,11 +195,21 @@ export const AdviceDisplay = ({ advice, onFollowUpClick }: AdviceDisplayProps) =
               <Download className="w-4 h-4 mr-2" />
               Download Plan (PDF)
             </Button>
-            <Button variant="outline" size="sm">
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => setShowCalendarDialog(true)}
+            >
               <Calendar className="w-4 h-4 mr-2" />
               Add to Calendar
             </Button>
           </div>
+
+          <CalendarDialog 
+            open={showCalendarDialog}
+            onOpenChange={setShowCalendarDialog}
+            steps={planSteps}
+          />
         </Card>
       )}
 
