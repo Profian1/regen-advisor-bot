@@ -16,9 +16,10 @@ import {
 
 interface AdviceDisplayProps {
   advice: string;
+  onFollowUpClick?: (followUpQuestion: string) => void;
 }
 
-export const AdviceDisplay = ({ advice }: AdviceDisplayProps) => {
+export const AdviceDisplay = ({ advice, onFollowUpClick }: AdviceDisplayProps) => {
   const sections = advice.split("###").filter(Boolean);
   
   const assessSection = sections.find(s => s.includes("ASSESS"));
@@ -223,7 +224,12 @@ export const AdviceDisplay = ({ advice }: AdviceDisplayProps) => {
           
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {followUps.map((item, index) => (
-              <Button key={index} variant="outline" className="justify-start h-auto py-3 px-4 text-left">
+              <Button 
+                key={index} 
+                variant="outline" 
+                className="justify-start h-auto py-3 px-4 text-left hover:bg-accent hover:text-accent-foreground transition-colors"
+                onClick={() => onFollowUpClick?.(item)}
+              >
                 {item}
               </Button>
             ))}
